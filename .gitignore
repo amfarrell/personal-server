@@ -1,3 +1,4 @@
 .vagrant
 vagrant-nocommit.*
+digital_ocean_data.yaml
 venv
