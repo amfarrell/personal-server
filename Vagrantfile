@@ -57,6 +57,7 @@ Vagrant.configure('2') do |config|
       '
     end
 
+    machine.vm.provision :file, source: "./secrets.sls", destination: "/vagrant/salt/roots/pillar/secrets.sls"
     machine.vm.provision :shell, inline: startup_script
   end
 end
