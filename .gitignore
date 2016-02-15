@@ -4,3 +4,4 @@ digital_ocean_data.yaml
 salt/roots/salt/letsencrypt/*.pem
 secrets.sls
 venv
+id_rsa
