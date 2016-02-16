@@ -1,15 +1,1 @@
-{% for key, value in pillar['env-vars'].items() %}
-export {{ key }}='{{ value }}'
-{% endfor %}
-export DATABASE_URL='{{ db_url }}'
-export DJANGO_SETTINGS_MODULE='{{ settings_module }}'
-export DOMAINS='["{{ pillar['domain'] }}", "www.{{ pillar['domain'] }}"]'
-
-{{ venv_path }}/bin/python {{ app_path }}/manage.py runserver 0.0.0.0:{{ pillar['app-port'] }}
-
-{% for key, value in pillar['env-vars'].items() %}
-unset {{ key }}
-{% endfor %}
-unset DATABASE_URL
-unset DJANGO_SETTINGS_MODULE
-unset DOMAINS
+{{ manage_wrapper_path }} runserver 0.0.0.0:{{ app_port }}

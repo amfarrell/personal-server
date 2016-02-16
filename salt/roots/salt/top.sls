@@ -6,5 +6,5 @@ base:
     - blog
     - py35
     - db
-    - django
+    - django_apps
     - nginx

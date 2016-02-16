@@ -35,11 +35,13 @@ create-pg-user:
   - require:
     - file: hba-conf
 
-create-database:
+{% for app_name, data in pillar['django_apps'].items() %}
+create-database-{{ app_name }}:
   postgres_database.present:
-  - name: {{ database }}
+  - name: {{ app_name }}
   - encoding: 'UTF8'
   - owner: {{ pg_user }}
   - db_user: postgres
   - require:
     - postgres_user: create-pg-user
+{% endfor %}

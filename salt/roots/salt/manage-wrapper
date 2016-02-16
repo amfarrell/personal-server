@@ -1,15 +1,19 @@
-{% for key, value in pillar['env-vars'].items() %}
-export {{ key }}='{{ value }}'
+{% for key in env_vars %}
+export {{ key }}='{{ pillar['secret_env_vars'][key] }}'
 {% endfor %}
 export DATABASE_URL='{{ db_url }}'
 export DJANGO_SETTINGS_MODULE='{{ settings_module }}'
 export DOMAINS='["{{ pillar['domain'] }}", "www.{{ pillar['domain'] }}"]'
+export STATIC_URL='{{ static_url }}'
+export STATIC_ROOT='{{ static_app_path }}'
 
 {{ venv_path }}/bin/python3.5 {{ app_path }}/manage.py $@
 
 unset DOMAINS
 unset DJANGO_SETTINGS_MODULE
 unset DATABASE_URL
-{% for key, value in pillar['env-vars'].items() %}
+unset STATIC_URL
+unset STATIC_ROOT
+{% for key in env_vars %}
 unset {{ key }}
 {% endfor %}

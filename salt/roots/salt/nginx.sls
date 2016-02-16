@@ -1,6 +1,4 @@
 {% from 'git.sls' import base_path %}
-{% from 'django.sls' import app_name %}
-{% from 'django.sls' import app_static_path %}
 {% from 'git.sls' import blog_path %}
 
 {% set fullchain_path = '/etc/letsencrypt/live/' + pillar['domain'] + '/fullchain.pem' %}
@@ -13,15 +11,15 @@ nginx-install:
   pkg.installed:
   - name: nginx
 
-nginx-port-forwarded:
+nginx-forwarding:
   file.managed:
   - name: /etc/nginx/sites-enabled/default
   - source: salt://nginx.conf
   - template: jinja
   - context:
     domain: {{ pillar['domain'] }}
-    collected_static_dir: {{ app_static_path }}
     blog_dir: {{ blog_path }}
+    base_path: {{ base_path }}
     fullchain_path: {{ fullchain_path }}
     key_path: {{ key_path }}
     chain_path: {{ chain_path }}
@@ -34,7 +32,7 @@ nginx-running:
     - name: nginx
     - enable: True
     - watch:
-      - file: nginx-port-forwarded
+      - file: nginx-forwarding
 
 ssl-fullchain:
   file.managed:

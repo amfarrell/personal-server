@@ -1,8 +1,11 @@
 {% from 'git.sls' import base_path %}
 {% from 'git.sls' import blog_path %}
-{% from 'venv.sls' import venv_path %}
+{% from 'venv.sls' import blog_venv_path %}
 
 {#
+Do not try to run webpack as part of the build process.
+It is just too finnicky.
+
 install-node:
   pkg.installed:
     - name: node
@@ -34,11 +37,11 @@ generate-commentsjs:
 
 mkdocs:
   cmd.run:
-  - name: '{{ venv_path }}/bin/mkdocs build --clean'
+  - name: '{{ blog_venv_path }}/bin/mkdocs build --clean'
   - cwd: {{ blog_path }}
   - env:
     - 'LC_ALL': 'C.UTF-8'
     - 'LANG': 'C.UTF-8'
   - require:
-    - virtualenv: create-virtualenv
+    - virtualenv: create-virtualenv-blog
     - sls: git

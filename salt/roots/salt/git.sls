@@ -1,6 +1,5 @@
 {% set base_path='/home/vagrant' %}
 {% set blog_path=base_path+'/blog' %}
-{% set app_path=base_path+'/restcomments' %}
 
 install-git:
   pkg.installed:
@@ -14,10 +13,12 @@ clone-personal-site:
     - require:
       - pkg: install-git
 
-clone-comments-server:
+{% for app_name, data in pillar['django_apps'].items() %}
+clone-{{ app_name }}:
   git.latest:
-    - name: git@github.com:amfarrell/restcomments.git
+    - name: {{ data['git_repo']}}
     - identity: /vagrant/id_rsa
-    - target: {{ app_path }}
+    - target: {{ base_path }}/{{ app_name }}
     - require:
       - pkg: install-git
+{% endfor %}
