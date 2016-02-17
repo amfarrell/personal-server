@@ -38,7 +38,8 @@ gunicorn-upstart-file-{{ app_name }}:
     - mode: '744'
     - template: jinja
     - context:
-      settings_module: {{ data['settings_module'] }}
+      settings_module: {{ data.get('settings_module', app_name+'.settings') }}
+      wsgi_module: {{ data.get('wsgi_module', app_name+'.wsgi') }}
       static_app_path: {{ static_app_path }}
       static_url: /static_{{ app_name }}/
       env_vars: {{ data['env_vars'] }}

@@ -4,7 +4,8 @@ django_apps:
   restcomments:
     git_repo: git@github.com:amfarrell/restcomments.git
     app_port: 8081
-    settings_module: restcomments.settings
+    settings_module: comments.settings
+    wsgi_module: comments.wsgi
     env_vars:
       - GITHUB_CLIENT_SECRET
       - SENDGRID_API_KEY
