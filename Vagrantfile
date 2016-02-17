@@ -26,7 +26,7 @@ Vagrant.configure('2') do |config|
         echo "\n"
       '
     end
-    
+
     machine.vm.provider :digital_ocean do |provider, override|
       begin
         file = File.open('./digital_ocean_data.yaml', 'r')
@@ -47,12 +47,13 @@ Vagrant.configure('2') do |config|
       provider.token = digital_ocean_token
       provider.name = 'amfarrell_backup2'
       provider.image = 'ubuntu-14-04-x64'
-      provider.region = 'nyc1'
-      provider.size = '512mb'
+      provider.region = 'lon1'
+      provider.size = '4gb'
 
       startup_script += '
         echo "\n"
-        echo "Visit http://$(curl http://169.254.169.254/latest/meta-data/public-ipv4 2> /dev/null )/admin"
+        echo "Visit http://$(curl http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address 2> /dev/null )\n"
+
         echo "\n"
       '
     end
