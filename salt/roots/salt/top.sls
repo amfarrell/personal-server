@@ -8,3 +8,4 @@ base:
     - db
     - django_apps
     - nginx
+    - certs

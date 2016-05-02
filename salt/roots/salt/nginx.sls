@@ -1,11 +1,11 @@
 {% from 'git.sls' import base_path %}
 {% from 'git.sls' import blog_path %}
 
-{% set fullchain_path = '/etc/letsencrypt/live/' + pillar['domain'] + '/fullchain.pem' %}
-{% set key_path = '/etc/letsencrypt/live/' + pillar['domain'] + '/privkey.pem' %}
-{% set chain_path = '/etc/letsencrypt/live/' + pillar['domain'] + '/chain.pem' %}
-{% set cert_path = '/etc/letsencrypt/live/' + pillar['domain'] + '/cert.pem' %}
-{% set dhparam_path = '/etc/nginx/dhparam.pem' %}
+{% from 'certs.sls' import fullchain_path %}
+{% from 'certs.sls' import key_path %}
+{% from 'certs.sls' import chain_path %}
+{% from 'certs.sls' import cert_path %}
+{% from 'certs.sls' import dhparam_path %}
 
 nginx-install:
   pkg.installed:
@@ -33,33 +33,3 @@ nginx-running:
     - enable: True
     - watch:
       - file: nginx-forwarding
-
-ssl-fullchain:
-  file.managed:
-  - name: {{ fullchain_path }}
-  - source: salt://letsencrypt/fullchain1.pem
-  - makedirs: True
-
-ssl-key:
-  file.managed:
-  - name: {{ key_path }}
-  - source: salt://letsencrypt/privkey1.pem
-  - makedirs: True
-
-ssl-chain:
-  file.managed:
-  - name: {{ chain_path }}
-  - source: salt://letsencrypt/chain1.pem
-  - makedirs: True
-
-ssl-cert:
-  file.managed:
-  - name: {{ cert_path }}
-  - source: salt://letsencrypt/cert1.pem
-  - makedirs: True
-
-dhparam:
-  file.managed:
-  - name: {{ dhparam_path }}
-  - source: salt://letsencrypt/dhparam.pem
-  - makedirs: True
