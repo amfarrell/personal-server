@@ -8,23 +8,27 @@ startup_script = "
   rm -rf /vagrant/venv
   salt-call state.highstate
 "
+startup_script += '
+echo "\n"
+echo "Visit http://$(curl http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address 2> /dev/null )\n"
+
+echo "\n"
+'
 
 Vagrant.configure('2') do |config|
   # Alternatively, use provider.name below to set the Droplet name. config.vm.hostname takes precedence.
+  #config.vm.box = "ubuntu/xenial64"
+  #config.vm.box_url = "ubuntu/xenial64"
   config.vm.box = "ubuntu/trusty64"
   config.vm.box_url = "ubuntu/trusty64"
 
-  config.vm.define "www.amfarrell.com", primary: true do |machine|
+  config.vm.define "www.amfarrell.com2", primary: true do |machine|
 
     machine.vm.provider :virtualbox do |provider, override|
+      override.vm.synced_folder ".", "/home/ubuntu/"
       override.vm.network :forwarded_port, guest: 80, host: 8019
       override.vm.network :forwarded_port, guest: 443, host: 8049
       override.vm.network :forwarded_port, guest: 8080, host: 8189
-      startup_script += '
-        echo "\n"
-        echo "Visit http://0.0.0.0:8019/admin"
-        echo "\n"
-      '
     end
 
     machine.vm.provider :digital_ocean do |provider, override|
@@ -46,16 +50,11 @@ Vagrant.configure('2') do |config|
 
       provider.token = digital_ocean_token
       provider.name = 'amfarrell_backup2'
+      #provider.image = 'ubuntu-16-04-x64'
       provider.image = 'ubuntu-14-04-x64'
       provider.region = 'lon1'
-      provider.size = '4gb'
+      provider.size = '512mb'
 
-      startup_script += '
-        echo "\n"
-        echo "Visit http://$(curl http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address 2> /dev/null )\n"
-
-        echo "\n"
-      '
     end
 
     machine.vm.provision :file, source: "./secrets.sls", destination: "/vagrant/salt/roots/pillar/secrets.sls"
